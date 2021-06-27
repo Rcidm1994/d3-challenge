@@ -4,10 +4,10 @@ var svgWidth = window.innerWidth;
 var svgHeight = window.innerHeight;
 // Define the chart's margins as an object
 var chartMargin = {
-    top:100,
-    right:100,
-    bottom:100,
-    left:100
+    top:30,
+    right:30,
+    bottom:30,
+    left:30
 };
 // Define dimensions of the chart area
 var chartWidth = svgWidth - (chartMargin.left + chartMargin.right);
@@ -20,20 +20,25 @@ var svg = d3
     .attr('width', svgWidth);
 // Append group element
 var chartGroup = svg.append('g')
-    .attr('transform', `translate(${chartMargin.left}, ${chartMargin.top})`);
+    .attr('transform', `translate(${chartMargin.left}, ${chartMargin.top})`)
+    .attr('id', 'chartArea');
 // Read CSV
 d3.csv('assets/data/data.csv').then(function(healthData) {
     // parse data
+    // healthData.forEach(function(data) {
+    //     data.poverty =+ data.poverty;
+    //     data.healthcare =+ data.healthcare;
+    // })
     healthData.forEach(data => {
         data.poverty = +data.poverty;
         data.healthcare = +data.healthcare;
     });
     // create scales
     var xLinearScale = d3.scaleLinear()
-        .domain([d3.min(healthData, d => d.poverty), d3.max(healthData, d => d.poverty)])
+        .domain([d3.min(healthData, d => d.poverty), 0])
         .range([0,chartWidth]);
     var yLinearScale = d3.scaleLinear()
-        .domain([d3.min(healthData, d => d.healthcare), d3.max(healthData, d => d.healthcare)])
+        .domain([0, d3.max(healthData, d => d.healthcare)])
         .range([chartHeight,0]);
     // create axes
     var xAxis = d3.axisBottom(xLinearScale);
